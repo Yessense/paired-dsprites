@@ -209,7 +209,6 @@ class DspritesVAE(pl.LightningModule):
         self.log("Reconstruct image 1", loss[1], prog_bar=False)
         self.log("Reconstruct image 2", loss[2], prog_bar=False)
         self.log("kld", loss[3], prog_bar=False)
-        self.log("cos", loss[4], prog_bar=False)
         self.log("iou", iou, prog_bar=False)
         self.log("iou image 1", iou1, prog_bar=False)
         self.log("iou image 2", iou2, prog_bar=False)
