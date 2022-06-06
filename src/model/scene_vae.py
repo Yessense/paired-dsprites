@@ -13,6 +13,7 @@ torch.set_printoptions(sci_mode=False)
 
 from src.model.decoder import Decoder  # type: ignore
 from src.model.encoder import Encoder  # type: ignore
+torch.manual_seed(42)
 
 
 class DspritesVAE(pl.LightningModule):
@@ -62,6 +63,7 @@ class DspritesVAE(pl.LightningModule):
         self.img_dim = image_size
         self.encoder = Encoder(latent_dim=latent_dim, image_size=image_size, n_features=n_features)
         self.decoder = Decoder(latent_dim=latent_dim, image_size=image_size, n_features=n_features)
+        self.hd_placeholders = torch.randn(1, 5, self.latent_dim)
 
         self.save_hyperparameters()
 
@@ -96,6 +98,8 @@ class DspritesVAE(pl.LightningModule):
         mu, log_var = self.encoder(img)
         z = self.reparameterize(mu, log_var)
         z = z.view(-1, 5, self.latent_dim)
+        mask = self.hd_placeholders.expand(z.size()).to(self.device)
+        z = z * mask
 
         return mu, log_var, z
 
@@ -111,16 +115,12 @@ class DspritesVAE(pl.LightningModule):
 
         # z1 Восстанавливает 1 изображение
         z1 = torch.where(exchange_labels, feat_1, feat_2)
+        z1 = torch.sum(z1, dim=1)
+        r1 = self.decoder(z1)
 
         # z2 Восстанавливает 2 изображение изображение
         z2 = torch.where(exchange_labels, feat_2, feat_1)
-
-        z1 = torch.sum(z1, dim=1)
         z2 = torch.sum(z2, dim=1)
-
-        # Восстановленное 2 изображение
-        r1 = self.decoder(z1)
-        # Восстановленное 1 изображение
         r2 = self.decoder(z2)
 
         # calculate loss
