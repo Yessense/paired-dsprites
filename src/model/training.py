@@ -55,7 +55,7 @@ args = parser.parse_args()
 # Logger
 # ------------------------------------------------------------
 
-wandb_logger = WandbLogger(project='paired-dsprites', log_model=args.log_model, save_dir=args.logger_dir, l)
+wandb_logger = WandbLogger(project='paired-dsprites', log_model=args.log_model, save_dir=args.logger_dir)
 
 # ------------------------------------------------------------
 # Load dataset
