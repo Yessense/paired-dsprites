@@ -136,7 +136,7 @@ class DspritesVAE(pl.LightningModule):
         self.log("Val iou image 1", iou1, prog_bar=False)
         self.log("Val iou image 2", iou2, prog_bar=False)
 
-        if idx == 195:
+        if idx % 97 == 0:
             self.logger.experiment.log({
                 "reconstruct/validation": [
                     wandb.Image(img1[0], caption='Val Image 1'),
