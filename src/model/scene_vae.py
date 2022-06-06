@@ -220,7 +220,7 @@ class DspritesVAE(pl.LightningModule):
                     wandb.Image(r1[0], caption='Recon 1'),
                     wandb.Image(r2[0], caption='Recon 2'),
                 ]})
-            return loss[0]
+        return loss[0]
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)
