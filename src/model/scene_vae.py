@@ -90,17 +90,12 @@ class DspritesVAE(pl.LightningModule):
     def encode_features_latent(self, img):
         mu, log_var = self.encoder(img)
         mu = mu.view(-1, 5, self.latent_dim)
-        mask = self.hd_placeholders.expand(mu.size()).to(self.device)
-        mu = mu * mask
         return mu
 
     def encode_features(self, img):
         mu, log_var = self.encoder(img)
         z = self.reparameterize(mu, log_var)
         z = z.view(-1, 5, self.latent_dim)
-        if self.hd:
-            mask = self.hd_placeholders.expand(z.size()).to(self.device)
-            z = z * mask
 
         return mu, log_var, z
 
