@@ -104,7 +104,6 @@ class DspritesVAE(pl.LightningModule):
         # exchange
         img1, img2, exchange_labels = batch
 
-
         mu1, log_var1, feat_1 = self.encode_features(img1)
         mu2, log_var2, feat_2 = self.encode_features(img2)
 
@@ -137,13 +136,14 @@ class DspritesVAE(pl.LightningModule):
         self.log("Val iou image 1", iou1, prog_bar=False)
         self.log("Val iou image 2", iou2, prog_bar=False)
 
-        self.logger.experiment.log({
-            "reconstruct/validation": [
-                wandb.Image(img1[0], caption='Val Image 1'),
-                wandb.Image(img2[0], caption='Val Image 2'),
-                wandb.Image(r1[0], caption='Val Recon 1'),
-                wandb.Image(r2[0], caption='Val Recon 2'),
-            ]})
+        if idx == 195:
+            self.logger.experiment.log({
+                "reconstruct/validation": [
+                    wandb.Image(img1[0], caption='Val Image 1'),
+                    wandb.Image(img2[0], caption='Val Image 2'),
+                    wandb.Image(r1[0], caption='Val Recon 1'),
+                    wandb.Image(r2[0], caption='Val Recon 2'),
+                ]})
 
     def training_step(self, batch):
         """Exchanges, loss, logs"""
@@ -212,14 +212,15 @@ class DspritesVAE(pl.LightningModule):
         self.log("iou image 1", iou1, prog_bar=False)
         self.log("iou image 2", iou2, prog_bar=False)
 
-        self.logger.experiment.log({
-            "reconstruct/train": [
-                wandb.Image(img1[0], caption='Image 1'),
-                wandb.Image(img2[0], caption='Image 2'),
-                wandb.Image(r1[0], caption='Recon 1'),
-                wandb.Image(r2[0], caption='Recon 2'),
-            ]})
-        return loss[0]
+        if self.global_step % 500 == 0:
+            self.logger.experiment.log({
+                "reconstruct/train": [
+                    wandb.Image(img1[0], caption='Image 1'),
+                    wandb.Image(img2[0], caption='Image 2'),
+                    wandb.Image(r1[0], caption='Recon 1'),
+                    wandb.Image(r2[0], caption='Recon 2'),
+                ]})
+            return loss[0]
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr)

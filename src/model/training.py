@@ -67,7 +67,7 @@ train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers
 
 test_dataset = PairedDspritesDataset(dsprites_path=args.dataset_path,
                                      paired_dsprites_path=args.paired_test_path)
-test_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=1, shuffle=True)
+test_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=1)
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
@@ -107,7 +107,7 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 gpus = [0]
-log_every_n_steps = 196
+log_every_n_steps = None
 
 # trainer
 trainer = pl.Trainer(gpus=gpus,
@@ -115,8 +115,7 @@ trainer = pl.Trainer(gpus=gpus,
                      profiler=profiler,
                      callbacks=callbacks,
                      logger=wandb_logger,
-                     gradient_clip_val=args.grad_clip,
-                     log_every_n_steps=log_every_n_steps)
+                     gradient_clip_val=args.grad_clip)
 
 if not len(args.from_checkpoint):
     args.from_checkpoint = None
