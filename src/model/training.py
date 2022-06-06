@@ -63,11 +63,11 @@ wandb_logger = WandbLogger(project='paired-dsprites', log_model=args.log_model, 
 
 train_dataset = PairedDspritesDataset(dsprites_path=args.dataset_path,
                                       paired_dsprites_path=args.paired_train_path)
-train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=1, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=2, shuffle=True)
 
 test_dataset = PairedDspritesDataset(dsprites_path=args.dataset_path,
                                      paired_dsprites_path=args.paired_test_path)
-test_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=1)
+test_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=2)
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
