@@ -136,7 +136,6 @@ class DspritesVAE(pl.LightningModule):
         self.log("Val iou", iou, prog_bar=False)
         self.log("Val iou image 1", iou1, prog_bar=False)
         self.log("Val iou image 2", iou2, prog_bar=False)
-        self.log("Step :", self.global_step, prog_bar=True)
 
         self.logger.experiment.log({
             "reconstruct/validation": [

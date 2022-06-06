@@ -55,7 +55,7 @@ args = parser.parse_args()
 # Logger
 # ------------------------------------------------------------
 
-wandb_logger = WandbLogger(project='paired-dsprites', log_model=args.log_model, save_dir=args.logger_dir)
+wandb_logger = WandbLogger(project='paired-dsprites', log_model=args.log_model, save_dir=args.logger_dir, l)
 
 # ------------------------------------------------------------
 # Load dataset
@@ -107,6 +107,7 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 gpus = [0]
+log_every_n_steps = 200
 
 # trainer
 trainer = pl.Trainer(gpus=gpus,
@@ -114,7 +115,8 @@ trainer = pl.Trainer(gpus=gpus,
                      profiler=profiler,
                      callbacks=callbacks,
                      logger=wandb_logger,
-                     gradient_clip_val=args.grad_clip)
+                     gradient_clip_val=args.grad_clip,
+                     log_every_n_steps=log_every_n_steps)
 
 if not len(args.from_checkpoint):
     args.from_checkpoint = None
