@@ -107,7 +107,7 @@ callbacks = [
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
 gpus = [0]
-log_every_n_steps = 200
+log_every_n_steps = 196
 
 # trainer
 trainer = pl.Trainer(gpus=gpus,
