@@ -126,8 +126,6 @@ class DspritesVAE(pl.LightningModule):
         z2 = torch.sum(z2, dim=1)
         r2 = self.decoder(z2)
 
-        r1 = torch.clamp(r1, 0 + EPSILON, 1 - EPSILON)
-        r2 = torch.clamp(r2, 0 + EPSILON, 1 - EPSILON)
         # calculate loss
         assert torch.all(r1 >= 0) and torch.all(r1 <= 1)
         assert torch.all(r2 >= 0) and torch.all(r2 <= 1)
@@ -174,10 +172,6 @@ class DspritesVAE(pl.LightningModule):
         z2 = torch.where(exchange_labels, feat_2, feat_1)
         z2 = torch.sum(z2, dim=1)
         r2 = self.decoder(z2)
-
-
-        r1 = torch.clamp(r1, 0 + EPSILON, 1 - EPSILON)
-        r2 = torch.clamp(r2, 0 + EPSILON, 1 - EPSILON)
 
         # Check numerical stability
         assert torch.all(r1 >= 0) and torch.all(r1 <= 1)
