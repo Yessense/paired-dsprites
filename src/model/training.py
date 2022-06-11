@@ -42,8 +42,6 @@ program_parser.add_argument("--batch_size", type=int, default=4)
 program_parser.add_argument("--from_checkpoint", type=str, default='')
 program_parser.add_argument("--grad_clip", type=float, default=0.0)
 
-# Hard parameters
-program_parser.add_argument("--gpus", type=int, default=0)
 
 # Add model specific args
 parser = DspritesVAE.add_model_specific_args(parent_parser=parser)
