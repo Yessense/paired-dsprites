@@ -13,7 +13,10 @@ torch.set_printoptions(sci_mode=False)
 
 from src.model.decoder import Decoder  # type: ignore
 from src.model.encoder import Encoder  # type: ignore
+
 torch.manual_seed(42)
+
+EPSILON = 1e-6
 
 
 class DspritesVAE(pl.LightningModule):
@@ -123,8 +126,8 @@ class DspritesVAE(pl.LightningModule):
         z2 = torch.sum(z2, dim=1)
         r2 = self.decoder(z2)
 
-        r1 = torch.clip(r1, 0, 1)
-        r2 = torch.clip(r2, 0, 1)
+        r1.clamp_(0 + EPSILON, 1 - EPSILON)
+        r2.clamp_(0 + EPSILON, 1 - EPSILON)
         # calculate loss
         assert torch.all(r1 >= 0) and torch.all(r1 <= 1)
         assert torch.all(r2 >= 0) and torch.all(r2 <= 1)
@@ -172,9 +175,9 @@ class DspritesVAE(pl.LightningModule):
         z2 = torch.sum(z2, dim=1)
         r2 = self.decoder(z2)
 
-        r1 = torch.clip(r1, 0, 1)
-        r2 = torch.clip(r2, 0, 1)
 
+        r1.clamp_(0 + EPSILON, 1 - EPSILON)
+        r2.clamp_(0 + EPSILON, 1 - EPSILON)
         # Check numerical stability
         assert torch.all(r1 >= 0) and torch.all(r1 <= 1)
         assert torch.all(r2 >= 0) and torch.all(r2 <= 1)
