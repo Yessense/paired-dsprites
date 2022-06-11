@@ -42,6 +42,9 @@ program_parser.add_argument("--batch_size", type=int, default=4)
 program_parser.add_argument("--from_checkpoint", type=str, default='')
 program_parser.add_argument("--grad_clip", type=float, default=0.0)
 
+# Hard parameters
+program_parser.add_argument("--gpus", type=int, default=0)
+
 # Add model specific args
 parser = DspritesVAE.add_model_specific_args(parent_parser=parser)
 
@@ -68,6 +71,7 @@ train_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers
 test_dataset = PairedDspritesDataset(dsprites_path=args.dataset_path,
                                      paired_dsprites_path=args.paired_test_path)
 test_loader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=2)
+
 # ------------------------------------------------------------
 # Load model
 # ------------------------------------------------------------
@@ -106,7 +110,7 @@ callbacks = [
 
 # trainer parameters
 profiler = 'simple'  # 'simple'/'advanced'/None
-gpus = [0]
+gpus = [args.gpus]
 log_every_n_steps = None
 
 # trainer
