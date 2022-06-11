@@ -38,6 +38,7 @@ class DspritesVAE(pl.LightningModule):
 
         # experiment options
         parser.add_argument("--latent_dim", type=int, default=1024)
+        parser.add_argument("--hd_norm", type=bool, default=False)
 
         return parent_parser
 
@@ -49,6 +50,7 @@ class DspritesVAE(pl.LightningModule):
                  loss_mode: str = 'mean',
                  save_batch_errors: bool = False,
                  latent_dim: int = 1024,
+                 hd_norm: bool = False,
                  **kwargs):
         super().__init__()
         # debug
@@ -58,6 +60,7 @@ class DspritesVAE(pl.LightningModule):
         # Experiment options
         self.latent_dim = latent_dim
         self.n_features = n_features
+        self.hd_norm = hd_norm
 
         # model parameters
         self.lr = lr
@@ -66,7 +69,11 @@ class DspritesVAE(pl.LightningModule):
         self.img_dim = image_size
         self.encoder = Encoder(latent_dim=latent_dim, image_size=image_size, n_features=n_features)
         self.decoder = Decoder(latent_dim=latent_dim, image_size=image_size, n_features=n_features)
+
+        # hd placeholders
         self.hd_placeholders = torch.randn(1, 5, self.latent_dim)
+        if self.hd_norm:
+            self.hd_placeholders /= torch.linalg.norm(self.hd_placeholders, dim=2).unsqueeze(-1)
 
         self.save_hyperparameters()
 
