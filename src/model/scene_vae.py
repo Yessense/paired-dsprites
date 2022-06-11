@@ -176,8 +176,9 @@ class DspritesVAE(pl.LightningModule):
         r2 = self.decoder(z2)
 
 
-        r1.clamp_(0 + EPSILON, 1 - EPSILON)
-        r2.clamp_(0 + EPSILON, 1 - EPSILON)
+        r1 = torch.clamp(r1, 0 + EPSILON, 1 - EPSILON)
+        r2 = torch.clamp(r2, 0 + EPSILON, 1 - EPSILON)
+
         # Check numerical stability
         assert torch.all(r1 >= 0) and torch.all(r1 <= 1)
         assert torch.all(r2 >= 0) and torch.all(r2 <= 1)
