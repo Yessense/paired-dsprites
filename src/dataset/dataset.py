@@ -12,11 +12,12 @@ import operator
 class Dsprites(Dataset):
     """Store dsprites images"""
 
-    def __init__(self, path='./dataset/data/dsprite_train.npz'):
+    def __init__(self, path='./dataset/data/dsprite_train.npz', max_exchanges=1):
         # ----------------------------------------
         # Load dataset
         # ----------------------------------------
 
+        self.max_exchanges = max_exchanges
         # Load npz numpy archive
         dataset_zip = np.load(path)
 
@@ -73,15 +74,6 @@ class Dsprites(Dataset):
         return self.size
 
     def __getitem__(self, idx):
-        if self.block_orientation:
-            labels = []
-            for mult in self.multiplier:
-                labels.append(idx // mult)
-                idx %= mult
-
-            labels[2] = 0
-            idx = self._get_element_pos(labels)
-
         # Choose index image
         img = self.imgs[idx]
         labels = self.labels[idx]
@@ -105,9 +97,6 @@ class Dsprites(Dataset):
 
             pair_img_labels[feature_type] = other_feature
 
-        if self.block_orientation:
-            pair_img_labels[2] = 0
-
         pair_idx: int = self._get_element_pos(pair_img_labels)
         pair_img = self.imgs[pair_idx]
 
@@ -120,8 +109,8 @@ class Dsprites(Dataset):
 
 class PairedDspritesDataset(Dataset):
     def __init__(self,
-                 dsprites_path='data/dsprites_train.npz',
-                 paired_dsprites_path='data/paired_train.npz'):
+                 dsprites_path='./dataset/data/dsprites_train.npz',
+                 paired_dsprites_path='./dataset/data/100_30_dataset/paired_train.npz'):
         # Load npz numpy archive
         dsprites = np.load(dsprites_path, allow_pickle=True)
         paired_dsprites = np.load(paired_dsprites_path, allow_pickle=True)
@@ -164,7 +153,7 @@ def show_img(labels: Optional[List[int]] = None) -> None:
 
 
 if __name__ == '__main__':
-    md = Dsprites(max_exchanges=1, block_orientation=True)
+    md = Dsprites()
 
     batch_size = 5
     loader = DataLoader(md, batch_size=batch_size, shuffle=True)

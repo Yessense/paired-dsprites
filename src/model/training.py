@@ -88,7 +88,7 @@ monitor = 'Total loss'
 patience = 5
 early_stop_callback = EarlyStopping(monitor=monitor, patience=patience)
 
-# checkpoint
+# checkpoints
 save_top_k = 2
 checkpoint_callback = ModelCheckpoint(monitor=monitor, save_top_k=save_top_k)
 

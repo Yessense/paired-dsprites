@@ -99,10 +99,12 @@ class DspritesVAE(pl.LightningModule):
             # Reconstruction mode
             return mu
 
-    def encode_features_latent(self, img):
-        mu, log_var = self.encoder(img)
-        mu = mu.view(-1, 5, self.latent_dim)
-        return mu
+    def encode_features_inference(self, img):
+        z, log_var = self.encoder(img)
+        z = z.view(-1, 5, self.latent_dim)
+        mask = self.hd_placeholders.expand(z.size()).to(self.device)
+        z = z * mask
+        return z
 
     def encode_features(self, img):
         mu, log_var = self.encoder(img)
@@ -141,10 +143,15 @@ class DspritesVAE(pl.LightningModule):
         iou2 = iou_pytorch(r2, img2)
         iou = (iou1 + iou2) / 2
 
+        mu = mu1 + mu2 / 2
+        log_var = log_var1 + log_var2 / 2
+        loss = self.loss_f(r1, r2, img1, img2, mu, log_var)
+
         # # log training process
         self.log("Val iou", iou, prog_bar=False)
         self.log("Val iou image 1", iou1, prog_bar=False)
         self.log("Val iou image 2", iou2, prog_bar=False)
+        self.log("Validation Loss", loss[0], prog_bar=False)
 
         if idx % 97 == 0:
             self.logger.experiment.log({
