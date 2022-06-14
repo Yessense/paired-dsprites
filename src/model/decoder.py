@@ -32,8 +32,11 @@ class Decoder(nn.Module):
 
         # self.convT5 = nn.ConvTranspose2d(256, 128, **cnn_kwargs)
         self.convT4 = nn.ConvTranspose2d(128, 64, **cnn_kwargs)
+        self.bn4 = nn.BatchNorm2d(64)
         self.convT3 = nn.ConvTranspose2d(64, 32, **cnn_kwargs)
+        self.bn3 = nn.BatchNorm2d(32)
         self.convT2 = nn.ConvTranspose2d(32, 16, **cnn_kwargs)
+        self.bn3 = nn.BatchNorm2d(16)
         self.convT1 = nn.ConvTranspose2d(16, n_channels, **cnn_kwargs)
 
         self.activation = torch.nn.GELU()
@@ -49,8 +52,11 @@ class Decoder(nn.Module):
         # Convolutional layers with ReLu activations
         # x = self.activation(self.convT5(x))
         x = self.activation(self.convT4(x))
+        x = self.bn4(x)
         x = self.activation(self.convT3(x))
+        x = self.bn3(x)
         x = self.activation(self.convT2(x))
+        x = self.bn2(x)
 
         # Sigmoid activation for final conv layer
         x = self.final_activation(self.convT1(x))
