@@ -36,7 +36,7 @@ class Decoder(nn.Module):
         self.convT3 = nn.ConvTranspose2d(64, 32, **cnn_kwargs)
         self.bn3 = nn.BatchNorm2d(32)
         self.convT2 = nn.ConvTranspose2d(32, 16, **cnn_kwargs)
-        self.bn3 = nn.BatchNorm2d(16)
+        self.bn2 = nn.BatchNorm2d(16)
         self.convT1 = nn.ConvTranspose2d(16, n_channels, **cnn_kwargs)
 
         self.activation = torch.nn.GELU()
